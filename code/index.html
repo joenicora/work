@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Joe Nicora | code</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet"
+      href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+
+    <!-- Vitality Theme CSS -->
+    <!-- INSTRUCTIONS: Uncomment the color scheme you want to use. Red is chosen by default. -->
+    <link href="../css/vitality-blue.css" rel="stylesheet" type="text/css">
+
+    <!-- IE8 support for HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+
+<body id="page-top" class="" style="padding: 20px;">
+
+    <h3>Basic Javascript function</h3>
+    <pre>
+      <code class="javascript">
+        function getByPath(object, expression) {
+          if (!(object && expression)) {
+            throw new Error('both object and expression args are required');
+          }
+
+          return expression.trim().split('.').reduce(function (prev, curr) {
+            var arr = curr.match(/(.*?)\[(.*?)\]/);
+
+            if (arr) {
+              return prev && prev[arr[1]][arr[2]];
+            }
+            else {
+              return prev && prev[curr];
+            }
+          }, object);
+        }
+      </code>
+    </pre>
+
+    <h3>Module export with Backbone extend pattern</h3>
+    <pre>
+      <code class="javascript">
+        var AmpersandModel = require('ampersand-model');
+
+
+        module.exports = AmpersandModel.extend({
+            type: 'user',
+            props: {
+                id: ['string'],
+                firstName: ['string', true, ''],
+                lastName: ['string', true, ''],
+                username: ['string'],
+            },
+            derived: {
+                fullName: {
+                    deps: ['firstName', 'lastName'],
+                    cache: true,
+                    fn: function () {
+                        return this.firstName + ' ' + this.lastName;
+                    }
+                },
+                initials: {
+                    deps: ['firstName', 'lastName'],
+                    cache: true,
+                    fn: function () {
+                        return (this.firstName.charAt(0) + this.lastName.charAt(0)).toUpperCase();
+                    }
+                }
+            }
+        });
+      </code>
+    </pre>
+
+    <h3>React list component in ES 2015</h3>
+    <pre>
+      <code class="react">
+        import React from 'react';
+        import Ul from './Ul';
+        import Wrapper from './Wrapper';
+
+        function List(props) {
+          const Component = props.component;
+          let content = (&lt;div&gt;&lt;/div&gt;);
+
+          // If we have items, render them
+          if (props.items) {
+            content = props.items.map((item, index) => (
+              &lt;Component key={`item-${index}`} item={item} /&gt;
+            ));
+          } else {
+            // Otherwise render a single component
+            content = (&lt;Component /&gt;);
+          }
+
+          return (
+            &lt;Wrapper&gt;
+              &lt;Ul&gt;
+                {content}
+              &lt;/Ul&gt;
+            &lt;/Wrapper&gt;
+          );
+        }
+
+        List.propTypes = {
+          component: React.PropTypes.func.isRequired,
+          items: React.PropTypes.array,
+        };
+
+        export default List;
+      </code>
+    </pre>
+
+    <!-- Core Scripts -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+
+</html>
